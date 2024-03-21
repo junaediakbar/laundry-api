@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { tbl_akun: tblAkun, dataPerson } = require('../app/models');
+const { accounts } = require('../app/models');
 const dotenv = require('dotenv');
 dotenv.config();
 const auth = (req, res, next) => {
@@ -13,16 +13,21 @@ const auth = (req, res, next) => {
       });
     }
     jwt.verify(bearerToken, process.env.SECRET_KEY, (err, user) => {
-      console.log(err);
+      if (err)
+        return res.sendStatus(403).json({
+          status: 'failed',
+          message: 'Failed authorization',
+        });
 
-      if (err) return res.sendStatus(403);
-
-      req.user = user;
-
-      next();
+      if (user.id) {
+        console.log('USER', user);
+        accounts.findByPk(user.id).then((instance) => {
+          req.user = instance;
+          return next();
+        });
+      }
     });
   } catch (err) {
-    console.log(err);
     res.status(401).json({
       status: 'failed',
       message: 'Invalid token',

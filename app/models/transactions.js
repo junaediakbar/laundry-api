@@ -8,16 +8,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      transactions.belongsTo(models.accounts, {
-        foreignKey: 'fkAuthor',
-        onDelete: 'CASCADE',
-      });
+      // define association here
+      transactions.belongsTo(models.accounts, { foreignKey: 'fkAuthor' });
     }
   }
   transactions.init(
     {
       transactionId: DataTypes.STRING,
       notaId: DataTypes.STRING,
+      weight: DataTypes.STRING,
+      service: DataTypes.INTEGER,
+      price: DataTypes.STRING,
       name: DataTypes.STRING,
       noTelp: DataTypes.STRING,
       address: DataTypes.STRING,
@@ -26,10 +27,11 @@ module.exports = (sequelize, DataTypes) => {
       dateIn: DataTypes.DATE,
       dateDone: DataTypes.DATE,
       dateOut: DataTypes.DATE,
+      status: DataTypes.STRING,
+      deletedAt: DataTypes.DATE,
     },
     {
       sequelize,
-      paranoid: true,
       modelName: 'transactions',
     }
   );

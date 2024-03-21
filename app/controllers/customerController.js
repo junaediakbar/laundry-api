@@ -1,9 +1,9 @@
-const { transactions, accounts } = require('../models');
+const { customers, accounts } = require('../models');
 const ApiError = require('../../utils/ApiError');
 
-const getAllTransactions = async (req, res) => {
+const getAllCustomers = async (req, res) => {
   const { role } = req.user || {};
-  const { limit, page, sortBy, sortType, authorId, isExport } = req.query;
+  const { limit, page, sortBy, sortType, isExport } = req.query;
 
   try {
     if (role === 1) {
@@ -14,34 +14,14 @@ const getAllTransactions = async (req, res) => {
     const isExportFilter = Boolean(isExport);
 
     const filter = {
-      include: [
-        {
-          model: accounts,
-        },
-      ],
       limit: limitFilter,
       offset: (pageFilter - 1) * limitFilter,
-      order: [[sortBy || 'dateIn', sortType || 'DESC']],
+      order: [[sortBy || 'id', sortType || 'DESC']],
     };
-    if (authorId) {
-      filter.where = {
-        fkAuthor: authorId,
-      };
-    }
 
-    const data = await transactions.findAll(
-      isExportFilter
-        ? {
-            include: [
-              {
-                model: accounts,
-              },
-            ],
-          }
-        : filter
-    );
+    const data = await customers.findAll(isExportFilter ? {} : filter);
 
-    const total = await transactions.count(filter);
+    const total = await customers.count(filter);
 
     res.status(200).json({
       message: 'Data berhasil didapatkan.',
@@ -55,7 +35,7 @@ const getAllTransactions = async (req, res) => {
         to: Number(page)
           ? (Number(page) - 1) * Number(limit) + data.length
           : data.length,
-        sortBy: sortBy || 'dateIn',
+        sortBy: sortBy || 'id',
         sortType: sortType || 'DESC',
       },
     });
@@ -66,7 +46,7 @@ const getAllTransactions = async (req, res) => {
   }
 };
 
-const addTransaction = async (req, res) => {
+const addCustomer = async (req, res) => {
   const { role } = req.user || {};
   const { name, noTelp, address, dateIn, dateDone, weight, service, price } =
     req.body;
@@ -75,23 +55,10 @@ const addTransaction = async (req, res) => {
       console.log('USER', req.user);
       throw new ApiError(403, 'Anda tidak memiliki akses.');
     }
-    console.log(req.user);
-    const data = await transactions.create({
-      transactionId: 'N' + Date.now(),
-      notaId: 'N' + Date.now(),
-      weight: weight,
-      service: service,
-      price: price,
+    const data = await customers.create({
       name: name,
       noTelp: noTelp,
       address: address,
-      createdBy: req.user.name,
-      fkAuthor: req.user.id,
-      dateIn: dateIn,
-      dateDone: dateDone,
-      dateOut: null,
-      status: 'Diterima',
-      deletedAt: null,
     });
     res.status(200).json({
       message: 'Data berhasil ditambahkan.',
@@ -104,4 +71,4 @@ const addTransaction = async (req, res) => {
   }
 };
 
-module.exports = { getAllTransactions, addTransaction };
+module.exports = { getAllCustomers, addCustomer };
