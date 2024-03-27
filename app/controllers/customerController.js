@@ -48,7 +48,7 @@ const getAllCustomers = async (req, res) => {
 
 const addCustomer = async (req, res) => {
   const { role } = req.user || {};
-  const { name, noTelp, address, dateIn, dateDone, weight, service, price } =
+  const { name, noTelp, address } =
     req.body;
   try {
     if (role === 1) {
