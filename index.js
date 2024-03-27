@@ -22,3 +22,5 @@ const server = http.createServer(app);
 server.listen(port, '0.0.0.0', () => {
   console.log(`Server listening on port ${port}, http://localhost:3001`);
 });
+
+module.exports = app;
