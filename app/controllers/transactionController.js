@@ -14,11 +14,7 @@ const getAllTransactions = async (req, res) => {
     const isExportFilter = Boolean(isExport);
 
     const filter = {
-      include: [
-        {
-          model: accounts,
-        },
-      ],
+      include: [],
       limit: limitFilter,
       offset: (pageFilter - 1) * limitFilter,
       order: [[sortBy || 'dateIn', sortType || 'DESC']],
@@ -32,11 +28,7 @@ const getAllTransactions = async (req, res) => {
     const data = await transactions.findAll(
       isExportFilter
         ? {
-            include: [
-              {
-                model: accounts,
-              },
-            ],
+            include: [],
           }
         : filter
     );
