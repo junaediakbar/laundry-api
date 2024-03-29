@@ -45,19 +45,17 @@ const getAllTransactions = async (req, res) => {
 
     res.status(200).json({
       message: 'Data berhasil didapatkan.',
-      data: {
-        data,
-        total,
-        currentPages: Number(page),
-        limit: Number(limit),
-        maxPages: Math.ceil(total / Number(limit)),
-        from: Number(page) ? (Number(page) - 1) * Number(limit) + 1 : 1,
-        to: Number(page)
-          ? (Number(page) - 1) * Number(limit) + data.length
-          : data.length,
-        sortBy: sortBy || 'dateIn',
-        sortType: sortType || 'DESC',
-      },
+      data: data,
+      total,
+      currentPages: Number(page),
+      limit: Number(limit),
+      maxPages: Math.ceil(total / Number(limit)),
+      from: Number(page) ? (Number(page) - 1) * Number(limit) + 1 : 1,
+      to: Number(page)
+        ? (Number(page) - 1) * Number(limit) + data.length
+        : data.length,
+      sortBy: sortBy || 'dateIn',
+      sortType: sortType || 'DESC',
     });
   } catch (error) {
     res.status(error.statusCode || 500).json({
