@@ -5,5 +5,6 @@ const { login, register } = require('../controllers/acccountController');
 
 router.post('/login', login);
 router.post('/register', register);
+router.post('/me', register);
 
 module.exports = router;

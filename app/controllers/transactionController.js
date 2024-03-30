@@ -3,7 +3,7 @@ const ApiError = require('../../utils/ApiError');
 
 const getAllTransactions = async (req, res) => {
   const { role } = req.user || {};
-  const { limit, page, sortBy, sortType, authorId, isExport } = req.query;
+  const { limit, page, sortBy, sortType, authorId } = req.query;
 
   try {
     if (role === 1) {
@@ -11,27 +11,20 @@ const getAllTransactions = async (req, res) => {
     }
     const limitFilter = Number(limit ? limit : 10);
     const pageFilter = Number(page ? page : 1);
-    const isExportFilter = Boolean(isExport);
 
     const filter = {
       include: [],
       limit: limitFilter,
       offset: (pageFilter - 1) * limitFilter,
-      order: [[sortBy || 'dateIn', sortType || 'DESC']],
+      order: [[sortBy || 'dateIn', sortType || 'desc']],
     };
-    if (authorId) {
-      filter.where = {
-        fkAuthor: authorId,
-      };
-    }
+    // if (authorId) {
+    //   filter.where = {
+    //     fkAuthor: authorId,
+    //   };
+    // }
 
-    const data = await transactions.findAll(
-      isExportFilter
-        ? {
-            include: [],
-          }
-        : filter
-    );
+    const data = await transactions.findAll(filter);
 
     const total = await transactions.count(filter);
 
@@ -39,15 +32,15 @@ const getAllTransactions = async (req, res) => {
       message: 'Data berhasil didapatkan.',
       data: data,
       total,
-      currentPages: Number(page),
-      limit: Number(limit),
-      maxPages: Math.ceil(total / Number(limit)),
-      from: Number(page) ? (Number(page) - 1) * Number(limit) + 1 : 1,
-      to: Number(page)
-        ? (Number(page) - 1) * Number(limit) + data.length
+      currentPages: pageFilter,
+      limit: limitFilter,
+      maxPages: Math.ceil(total / limitFilter),
+      from: pageFilter ? (pageFilter - 1) * limitFilter + 1 : 1,
+      to: pageFilter
+        ? (pageFilter - 1) * limitFilter + data.length
         : data.length,
       sortBy: sortBy || 'dateIn',
-      sortType: sortType || 'DESC',
+      sortType: sortType || 'desc',
     });
   } catch (error) {
     res.status(error.statusCode || 500).json({
