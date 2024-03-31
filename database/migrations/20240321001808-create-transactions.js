@@ -7,64 +7,67 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       transactionId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       notaId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       weight: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       service: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
       },
       price: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       noTelp: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       address: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdBy: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       fkAuthor: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       dateIn: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       dateDone: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       dateOut: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      notes: {
+        type: Sequelize.STRING,
       },
       deletedAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('transactions');
-  }
+  },
 };

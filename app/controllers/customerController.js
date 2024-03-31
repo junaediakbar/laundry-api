@@ -1,19 +1,27 @@
+const Sequelize = require('sequelize');
 const { customers, accounts } = require('../models');
 const ApiError = require('../../utils/ApiError');
-
+const Op = Sequelize.Op;
 const getAllCustomers = async (req, res) => {
   const { role } = req.user || {};
-  const { limit, page, sortBy, sortType, isExport } = req.query;
+  const { limit, page, sortBy, sortType, isExport, param } = req.query;
 
   try {
-    if (role === 1) {
+    if (role === 'user') {
       throw new ApiError(403, 'Anda tidak memiliki akses.');
     }
     const limitFilter = Number(limit ? limit : 10);
     const pageFilter = Number(page ? page : 1);
     const isExportFilter = Boolean(isExport);
+    const paramFilter = param || '';
 
     const filter = {
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${paramFilter}%` } },
+          { noTelp: { [Op.like]: `%${paramFilter}%` } },
+        ],
+      },
       limit: limitFilter,
       offset: (pageFilter - 1) * limitFilter,
       order: [[sortBy || 'id', sortType || 'DESC']],
@@ -48,10 +56,9 @@ const getAllCustomers = async (req, res) => {
 
 const addCustomer = async (req, res) => {
   const { role } = req.user || {};
-  const { name, noTelp, address } =
-    req.body;
+  const { name, noTelp, address } = req.body;
   try {
-    if (role === 1) {
+    if (role === 'user') {
       console.log('USER', req.user);
       throw new ApiError(403, 'Anda tidak memiliki akses.');
     }
@@ -60,6 +67,7 @@ const addCustomer = async (req, res) => {
       noTelp: noTelp,
       address: address,
     });
+
     res.status(200).json({
       message: 'Data berhasil ditambahkan.',
       data,

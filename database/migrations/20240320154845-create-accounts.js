@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       role: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       noTelp: {
         type: Sequelize.STRING,

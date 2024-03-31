@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       transactionId: DataTypes.STRING,
       notaId: DataTypes.STRING,
       weight: DataTypes.STRING,
-      service: DataTypes.INTEGER,
+      service: DataTypes.STRING,
       price: DataTypes.STRING,
       name: DataTypes.STRING,
       noTelp: DataTypes.STRING,
@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       dateDone: DataTypes.DATE,
       dateOut: DataTypes.DATE,
       status: DataTypes.STRING,
+      notes: DataTypes.STRING,
       deletedAt: DataTypes.DATE,
     },
     {

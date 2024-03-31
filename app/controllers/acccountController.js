@@ -69,7 +69,7 @@ const register = async (req, res) => {
       password: hashedPassword,
       name: name,
       address: address,
-      role: 0,
+      role: 'admin',
       noTelp: no_telp,
       email: email,
     });

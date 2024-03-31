@@ -1,9 +1,12 @@
+const Sequelize = require('sequelize');
 const { transactions, accounts } = require('../models');
 const ApiError = require('../../utils/ApiError');
 
+const Op = Sequelize.Op;
+
 const getAllTransactions = async (req, res) => {
   const { role } = req.user || {};
-  const { limit, page, sortBy, sortType, authorId } = req.query;
+  const { limit, page, sortBy, sortType, authorId, param } = req.query;
 
   try {
     if (role === 1) {
@@ -11,12 +14,18 @@ const getAllTransactions = async (req, res) => {
     }
     const limitFilter = Number(limit ? limit : 10);
     const pageFilter = Number(page ? page : 1);
-
+    const paramFilter = param || '';
     const filter = {
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${paramFilter}%` } },
+          { notaId: { [Op.like]: `%${paramFilter}%` } },
+        ],
+      },
       include: [],
       limit: limitFilter,
       offset: (pageFilter - 1) * limitFilter,
-      order: [[sortBy || 'dateIn', sortType || 'desc']],
+      order: [[sortBy || 'dateIn', sortType || 'DESC']],
     };
     // if (authorId) {
     //   filter.where = {
@@ -28,7 +37,7 @@ const getAllTransactions = async (req, res) => {
 
     const total = await transactions.count(filter);
 
-    res.status(200).json({
+    await costumers.res.status(200).json({
       message: 'Data berhasil didapatkan.',
       data: data,
       total,
@@ -51,10 +60,19 @@ const getAllTransactions = async (req, res) => {
 
 const addTransaction = async (req, res) => {
   const { role } = req.user || {};
-  const { name, noTelp, address, dateIn, dateDone, weight, service, price } =
-    req.body;
+  const {
+    name,
+    noTelp,
+    address,
+    dateIn,
+    dateDone,
+    weight,
+    service,
+    price,
+    notes = '',
+  } = req.body;
   try {
-    if (role === 1) {
+    if (role === 'user') {
       console.log('USER', req.user);
       throw new ApiError(403, 'Anda tidak memiliki akses.');
     }
@@ -74,6 +92,7 @@ const addTransaction = async (req, res) => {
       dateDone: dateDone,
       dateOut: null,
       status: 'Diterima',
+      notes: notes,
       deletedAt: null,
     });
     res.status(200).json({
