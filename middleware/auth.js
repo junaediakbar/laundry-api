@@ -18,16 +18,12 @@ const auth = (req, res, next) => {
           status: 'failed',
           message: 'Failed authorization',
         });
-      console.log('USER', user);
+
       if (user.id) {
+        console.log('USER', user);
         accounts.findByPk(user.id).then((instance) => {
           req.user = instance;
           return next();
-        });
-      } else {
-        res.status(401).json({
-          status: 'failed',
-          message: 'Invalid token',
         });
       }
     });
