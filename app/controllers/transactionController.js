@@ -37,7 +37,7 @@ const getAllTransactions = async (req, res) => {
 
     const total = await transactions.count(filter);
 
-    await costumers.res.status(200).json({
+    res.status(200).json({
       message: 'Data berhasil didapatkan.',
       data: data,
       total,
