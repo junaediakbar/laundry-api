@@ -93,4 +93,19 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { login, register };
+const info = async (req, res) => {
+  const user = req.user || {};
+
+  try {
+    res.status(200).json({
+      message: 'Berhasil Mendapatkan Data.',
+      data: user,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { login, register, info };
