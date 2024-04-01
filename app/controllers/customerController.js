@@ -77,4 +77,24 @@ const addCustomer = async (req, res) => {
   }
 };
 
-module.exports = { getAllCustomers, addCustomer };
+const getCustomerById = async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.user || {};
+  const { name, noTelp, address } = req.body;
+  try {
+    const data = await customers.findOne({
+      where: { id },
+    });
+
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { getAllCustomers, addCustomer, getCustomerById };

@@ -63,6 +63,7 @@ const addTransaction = async (req, res) => {
   const {
     name,
     noTelp,
+    notaId,
     address,
     dateIn,
     dateDone,
@@ -79,7 +80,7 @@ const addTransaction = async (req, res) => {
     console.log(req.user);
     const data = await transactions.create({
       transactionId: 'N' + Date.now(),
-      notaId: 'N' + Date.now(),
+      notaId: notaId,
       weight: weight,
       service: service,
       price: price,
@@ -106,4 +107,23 @@ const addTransaction = async (req, res) => {
   }
 };
 
-module.exports = { getAllTransactions, addTransaction };
+const getTransactionById = async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.user || {};
+  const { name, noTelp, address } = req.body;
+  try {
+    const data = await transactions.findOne({
+      where: { id },
+    });
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { getAllTransactions, addTransaction, getTransactionById };
