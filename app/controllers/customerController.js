@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const { customers, accounts } = require('../models');
 const ApiError = require('../../utils/ApiError');
 const Op = Sequelize.Op;
+
 const getAllCustomers = async (req, res) => {
   const { role } = req.user || {};
   const { limit, page, sortBy, sortType, isExport, param } = req.query;
@@ -79,8 +80,7 @@ const addCustomer = async (req, res) => {
 
 const getCustomerById = async (req, res) => {
   const { id } = req.params;
-  const { role } = req.user || {};
-  const { name, noTelp, address } = req.body;
+  // const { role } = req.user || {};
   try {
     const data = await customers.findOne({
       where: { id },
@@ -97,4 +97,42 @@ const getCustomerById = async (req, res) => {
   }
 };
 
-module.exports = { getAllCustomers, addCustomer, getCustomerById };
+const deleteCustomerById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await customers.destroy({ where: { id } });
+
+    res.status(200).json({
+      message: 'Berhasil menghapus Customer',
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+const editCustomerById = async (req, res) => {
+  const { id } = req.params;
+  const { name, noTelp, address } = req.body;
+  try {
+    await customers.update({ name, noTelp, address }, { where: { id } });
+    const updatedCustomer = await customers.findOne({ where: { id } });
+    res.status(200).json({
+      message: 'Berhasil Merubah laporan tanam',
+      data: updatedCustomer,
+    });
+  } catch {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  getAllCustomers,
+  addCustomer,
+  getCustomerById,
+  deleteCustomerById,
+  editCustomerById,
+};

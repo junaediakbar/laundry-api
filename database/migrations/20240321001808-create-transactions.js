@@ -27,6 +27,12 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      cashier: {
+        type: Sequelize.STRING,
+      },
+      datePayment: {
+        type: Sequelize.DATE,
+      },
       noTelp: {
         type: Sequelize.STRING,
       },
