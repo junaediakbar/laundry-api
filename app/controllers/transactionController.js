@@ -272,6 +272,23 @@ const deleteTransactionById = async (req, res) => {
     });
   }
 };
+const getNotaByTransactionId = async (req, res) => {
+  const { id } = req.params;
+  const transactionId = id;
+  try {
+    const data = await transactions.findOne({
+      where: { transactionId },
+    });
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   getAllTransactions,
@@ -281,4 +298,5 @@ module.exports = {
   payTransactionById,
   deleteTransactionById,
   editTransactionById,
+  getNotaByTransactionId,
 };
