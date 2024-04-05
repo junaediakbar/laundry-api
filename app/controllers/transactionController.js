@@ -130,7 +130,7 @@ const takeTransactionById = async (req, res) => {
   const { id } = req.params;
   try {
     await transactions.update(
-      { dateDone: Sequelize.fn('NOW') },
+      { dateOut: Sequelize.fn('NOW') },
       { where: { id } }
     );
     const updated = await transactions.findOne({ where: { id } }).then(
