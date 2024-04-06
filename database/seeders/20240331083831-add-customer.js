@@ -14,7 +14,7 @@ module.exports = {
 
     for (let i = 0; i < 50; i++) {
       listCostumers.push({
-        name: faker.internet.userName(),
+        name: faker.person.fullName(),
         address: faker.location.streetAddress(),
         noTelp: '08' + faker.string.numeric(10), // '04812',
       });

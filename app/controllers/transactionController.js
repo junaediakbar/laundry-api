@@ -78,6 +78,7 @@ const addTransaction = async (req, res) => {
     service,
     status,
     price,
+    perprice,
     cashier,
     notes = '',
   } = req.body;
@@ -90,6 +91,7 @@ const addTransaction = async (req, res) => {
         weight: weight,
         service: service,
         price: price,
+        perprice: perprice,
         name: name,
         noTelp: noTelp,
         address: address,
