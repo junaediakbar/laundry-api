@@ -82,7 +82,12 @@ const addTransaction = async (req, res) => {
     cashier,
     notes = '',
   } = req.body;
-
+  console.log(req.user);
+  if (req.user == null) {
+    return res.status(500).json({
+      message: 'Anda tidak memiliki akses',
+    });
+  }
   try {
     const data = await transactions
       .create({
@@ -109,19 +114,25 @@ const addTransaction = async (req, res) => {
         cashier: cashier,
         deletedAt: null,
       })
-      .then(
-        async (res) =>
+      .then(async (res) => {
+        try {
           await postActivity({
             name: cashier,
             action: 'add-transaction',
             notaId: notaId,
-          })
-      );
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      });
     res.status(200).json({
       message: 'Data berhasil ditambahkan.',
       data,
     });
   } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
     res.status(error.statusCode || 500).json({
       message: error.message,
     });
@@ -190,6 +201,7 @@ const editTransactionById = async (req, res) => {
     weight,
     service,
     price,
+    perprice,
     status,
     cashier,
     notaId,
@@ -208,6 +220,7 @@ const editTransactionById = async (req, res) => {
         weight: weight,
         service: service,
         price: price,
+        perprice: perprice,
         status: status,
         cashier: cashier,
         notaId: notaId,
