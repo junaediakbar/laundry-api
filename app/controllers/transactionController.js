@@ -270,12 +270,13 @@ const getTransactionById = async (req, res) => {
 const deleteTransactionById = async (req, res) => {
   const { id } = req.params;
   try {
+    const deleted = await transactions.findOne({ where: { id } });
     await transactions.destroy({ where: { id } }).then(
       async (res) =>
         await postActivity({
-          name: 'admin',
+          name: deleted.cashier,
           action: 'delete-transaction',
-          notaId: res.notaId,
+          notaId: deleted.notaId,
         })
     );
     res.status(200).json({
