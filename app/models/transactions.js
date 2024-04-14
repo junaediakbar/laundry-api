@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       weight: DataTypes.STRING,
       service: DataTypes.STRING,
       price: DataTypes.STRING,
+      amountPayment: DataTypes.STRING,
       perprice: DataTypes.STRING,
       name: DataTypes.STRING,
       noTelp: DataTypes.STRING,

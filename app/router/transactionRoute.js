@@ -9,6 +9,8 @@ const {
   deleteTransactionById,
   editTransactionById,
   getNotaByTransactionId,
+  getLatestNota,
+  getInfoToday,
 } = require('../controllers/transactionController');
 
 router.get('/transaction', auth, getAllTransactions);
@@ -19,6 +21,8 @@ router.put('/transaction/pay/:id', auth, payTransactionById);
 router.put('/transaction/:id', auth, editTransactionById);
 router.delete('/transaction/:id', auth, deleteTransactionById);
 router.get('/transaction/nota/:id', getNotaByTransactionId);
+router.get('/transaction/recap/latest', auth, getLatestNota);
+router.get('/transaction/info/today', auth, getInfoToday);
 
 // router.post('/transaction', addTransaction);
 

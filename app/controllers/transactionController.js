@@ -142,11 +142,16 @@ const addTransaction = async (req, res) => {
 const takeTransactionById = async (req, res) => {
   const { id } = req.params;
   try {
+    const updated = await transactions.findOne({ where: { id } });
     await transactions.update(
-      { dateOut: Sequelize.fn('NOW') },
+      {
+        dateOut: Sequelize.fn('NOW'),
+        status: StatusPembayaran.LUNAS,
+        amountPayment: updated.price,
+      },
       { where: { id } }
     );
-    const updated = await transactions.findOne({ where: { id } }).then(
+    updated.then(
       async (res) =>
         await postActivity({
           name: res.name,
@@ -202,6 +207,7 @@ const editTransactionById = async (req, res) => {
     service,
     price,
     perprice,
+    amountPayment,
     status,
     cashier,
     notaId,
@@ -220,6 +226,7 @@ const editTransactionById = async (req, res) => {
         weight: weight,
         service: service,
         price: price,
+        amountPayment: amountPayment,
         perprice: perprice,
         status: status,
         cashier: cashier,
@@ -306,6 +313,75 @@ const getNotaByTransactionId = async (req, res) => {
   }
 };
 
+const getLatestNota = async (req, res) => {
+  console.log('loading');
+  try {
+    const data = await transactions.findOne({
+      order: [['id', 'DESC']],
+    });
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getInfoToday = async (req, res) => {
+  const todayStart = new Date().setHours(0, 0, 0, 0);
+  const TODAY_START = new Date(todayStart).toISOString();
+  const NOW = new Date().toISOString();
+  console.log(TODAY_START, NOW);
+  try {
+    const weightTotal = await transactions.sum('weight', {
+      where: {
+        dateIn: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+    const priceTotal = await transactions.sum('price', {
+      where: {
+        createdAt: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+    const amountPaymentTotal = await transactions.sum('amountPayment', {
+      where: {
+        createdAt: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data: {
+        weight: weightTotal,
+        price: priceTotal,
+        dateNow: NOW,
+        dateStart: TODAY_START,
+        amountPayment: amountPaymentTotal,
+        depositPayment: priceTotal - amountPaymentTotal,
+      },
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAllTransactions,
   addTransaction,
@@ -315,4 +391,6 @@ module.exports = {
   deleteTransactionById,
   editTransactionById,
   getNotaByTransactionId,
+  getLatestNota,
+  getInfoToday,
 };
