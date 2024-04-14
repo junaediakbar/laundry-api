@@ -382,6 +382,69 @@ const getInfoToday = async (req, res) => {
   }
 };
 
+const getRecapByDate = async (req, res) => {
+  const { date } = req.query;
+  const todayStart = new Date(date).setHours(0, 0, 0, 0);
+  const TODAY_START = new Date(todayStart).toISOString();
+  const NOW = new Date(date).toISOString();
+
+  try {
+    const weightTotal = await transactions.sum('weight', {
+      where: {
+        dateIn: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+    const priceTotal = await transactions.sum('price', {
+      where: {
+        createdAt: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+    const amountPaymentTotal = await transactions.sum('amountPayment', {
+      where: {
+        createdAt: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+
+    const data = await transactions.findAll({
+      where: {
+        createdAt: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: NOW,
+        },
+      },
+      raw: true,
+    });
+
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data: {
+        data: data,
+        weight: weightTotal,
+        price: priceTotal,
+        dateNow: NOW,
+        dateStart: TODAY_START,
+        amountPayment: amountPaymentTotal,
+        depositPayment: priceTotal - amountPaymentTotal,
+      },
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   getAllTransactions,
   addTransaction,
@@ -393,4 +456,5 @@ module.exports = {
   getNotaByTransactionId,
   getLatestNota,
   getInfoToday,
+  getRecapByDate,
 };
