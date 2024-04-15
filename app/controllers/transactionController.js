@@ -430,20 +430,9 @@ const getRecapByDate = async (req, res) => {
       raw: true,
     });
 
-    const data = await transactions.findAll({
-      where: {
-        createdAt: {
-          [Op.gt]: TODAY_START,
-          [Op.lt]: TOMORROW_START,
-        },
-      },
-      raw: true,
-    });
-
     res.status(200).json({
       message: 'Data berhasil didapatkan.',
       data: {
-        data: data,
         weight: weightTotal,
         price: priceTotal,
         dateTomorrow: TOMORROW_START,
@@ -451,6 +440,51 @@ const getRecapByDate = async (req, res) => {
         amountPaymentToday: amountPaymentTodayTotal,
         amountPayment: amountPaymentTotal,
         depositPayment: priceTotal - amountPaymentTotal,
+      },
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getListDataBydate = async (req, res) => {
+  const { date } = req.query;
+  const todayStart = new Date(date).setHours(0, 0, 0, 0);
+  const TODAY_START = new Date(todayStart).toISOString();
+  const tomorrowStart = new Date(
+    new Date(date).setDate(new Date(date).getDate() + 1)
+  );
+  const tomorrow = new Date(tomorrowStart).setHours(0, 0, 0, 0);
+  const TOMORROW_START = new Date(tomorrow).toISOString();
+  try {
+    const data = await transactions.findAll({
+      where: {
+        dateIn: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: TOMORROW_START,
+        },
+      },
+      raw: true,
+    });
+
+    const dataPayment = await transactions.findAll({
+      where: {
+        datePayment: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: TOMORROW_START,
+        },
+      },
+      raw: true,
+    });
+    res.status(200).json({
+      message: 'Data berhasil didapatkan.',
+      data: {
+        dateStart: TODAY_START,
+        dateTomorrow: TOMORROW_START,
+        data: data,
+        dataPayment: dataPayment,
       },
     });
   } catch (error) {
@@ -471,4 +505,5 @@ module.exports = {
   getLatestNota,
   getInfoToday,
   getRecapByDate,
+  getListDataBydate,
 };

@@ -12,6 +12,7 @@ const {
   getLatestNota,
   getInfoToday,
   getRecapByDate,
+  getListDataBydate,
 } = require('../controllers/transactionController');
 
 router.get('/transaction', auth, getAllTransactions);
@@ -25,6 +26,7 @@ router.get('/transaction/nota/:id', getNotaByTransactionId);
 router.get('/transaction/recap/latest', auth, getLatestNota);
 router.get('/transaction/info/today', auth, getInfoToday);
 router.get('/transaction/recap/date', auth, getRecapByDate);
+router.get('/transaction/recap/list-data', auth, getListDataBydate);
 
 // router.post('/transaction', addTransaction);
 
