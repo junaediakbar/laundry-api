@@ -386,32 +386,36 @@ const getRecapByDate = async (req, res) => {
   const { date } = req.query;
   const todayStart = new Date(date).setHours(0, 0, 0, 0);
   const TODAY_START = new Date(todayStart).toISOString();
-  const NOW = new Date(date).toISOString();
+  const tomorrowStart = new Date(
+    new Date(date).setDate(new Date(date).getDate() + 1)
+  );
+  const tomorrow = new Date(tomorrowStart).setHours(0, 0, 0, 0);
+  const TOMORROW_START = new Date(tomorrow).toISOString();
 
   try {
     const weightTotal = await transactions.sum('weight', {
       where: {
         dateIn: {
           [Op.gt]: TODAY_START,
-          [Op.lt]: NOW,
+          [Op.lt]: TOMORROW_START,
         },
       },
       raw: true,
     });
     const priceTotal = await transactions.sum('price', {
       where: {
-        createdAt: {
+        dateIn: {
           [Op.gt]: TODAY_START,
-          [Op.lt]: NOW,
+          [Op.lt]: TOMORROW_START,
         },
       },
       raw: true,
     });
     const amountPaymentTotal = await transactions.sum('amountPayment', {
       where: {
-        createdAt: {
+        dateIn: {
           [Op.gt]: TODAY_START,
-          [Op.lt]: NOW,
+          [Op.lt]: TOMORROW_START,
         },
       },
       raw: true,
@@ -421,7 +425,7 @@ const getRecapByDate = async (req, res) => {
       where: {
         createdAt: {
           [Op.gt]: TODAY_START,
-          [Op.lt]: NOW,
+          [Op.lt]: TOMORROW_START,
         },
       },
       raw: true,
@@ -433,7 +437,7 @@ const getRecapByDate = async (req, res) => {
         data: data,
         weight: weightTotal,
         price: priceTotal,
-        dateNow: NOW,
+        dateTomorrow: TOMORROW_START,
         dateStart: TODAY_START,
         amountPayment: amountPaymentTotal,
         depositPayment: priceTotal - amountPaymentTotal,

@@ -11,7 +11,7 @@ const db = {
     host: DB_HOST,
     port: DB_PORT,
     dialect: 'mysql',
-    dialectModule: mysql2,
+    // dialectModule: mysql2,
   },
   test: {
     username: DB_USER,
@@ -20,7 +20,7 @@ const db = {
     host: DB_HOST,
     port: DB_PORT,
     dialect: 'mysql',
-    dialectModule: mysql2,
+    // dialectModule: mysql2,
   },
   production: {
     username: DB_USER,
@@ -29,7 +29,7 @@ const db = {
     host: DB_HOST,
     port: DB_PORT,
     dialect: 'mysql',
-    dialectModule: mysql2,
+    // dialectModule: mysql2,
   },
 };
 module.exports = db;
