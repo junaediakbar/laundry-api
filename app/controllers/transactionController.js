@@ -411,9 +411,18 @@ const getRecapByDate = async (req, res) => {
       },
       raw: true,
     });
-    const amountPaymentTotal = await transactions.sum('amountPayment', {
+    const amountPaymentTodayTotal = await transactions.sum('amountPayment', {
       where: {
         dateIn: {
+          [Op.gt]: TODAY_START,
+          [Op.lt]: TOMORROW_START,
+        },
+      },
+      raw: true,
+    });
+    const amountPaymentTotal = await transactions.sum('amountPayment', {
+      where: {
+        datePayment: {
           [Op.gt]: TODAY_START,
           [Op.lt]: TOMORROW_START,
         },
@@ -439,6 +448,7 @@ const getRecapByDate = async (req, res) => {
         price: priceTotal,
         dateTomorrow: TOMORROW_START,
         dateStart: TODAY_START,
+        amountPaymentToday: amountPaymentTodayTotal,
         amountPayment: amountPaymentTotal,
         depositPayment: priceTotal - amountPaymentTotal,
       },
