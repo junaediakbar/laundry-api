@@ -437,9 +437,11 @@ const getRecapByDate = async (req, res) => {
         price: priceTotal,
         dateTomorrow: TOMORROW_START,
         dateStart: TODAY_START,
+        //Nota hari Ini yang dibayar
         amountPaymentToday: amountPaymentTodayTotal,
+        //Nota yang dibayar hari ini
         amountPayment: amountPaymentTotal,
-        depositPayment: priceTotal - amountPaymentTotal,
+        depositPayment: priceTotal - amountPaymentTodayTotal,
       },
     });
   } catch (error) {
