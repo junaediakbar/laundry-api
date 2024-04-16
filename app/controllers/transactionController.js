@@ -29,6 +29,7 @@ const getAllTransactions = async (req, res) => {
       offset: (pageFilter - 1) * limitFilter,
       order: [[sortBy || 'dateIn', sortType || 'DESC']],
     };
+
     if (statusFilter && statusFilter !== '') {
       filter.where.status = statusFilter;
     }
