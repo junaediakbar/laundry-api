@@ -11,7 +11,7 @@ process.env.TZ = 'Asia/Makassar';
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: '*',
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
