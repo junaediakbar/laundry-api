@@ -7,7 +7,7 @@ const Op = Sequelize.Op;
 
 const getAllTransactions = async (req, res) => {
   const { role } = req.user || {};
-  const { limit, page, sortBy, sortType, param } = req.query;
+  const { limit, page, sortBy, sortType, param, status } = req.query;
 
   try {
     if (role === 1) {
@@ -16,6 +16,7 @@ const getAllTransactions = async (req, res) => {
     const limitFilter = Number(limit ? limit : 10);
     const pageFilter = Number(page ? page : 1);
     const paramFilter = param || '';
+    const statusFilter = status || '';
     const filter = {
       where: {
         [Op.or]: [
@@ -28,11 +29,9 @@ const getAllTransactions = async (req, res) => {
       offset: (pageFilter - 1) * limitFilter,
       order: [[sortBy || 'dateIn', sortType || 'DESC']],
     };
-    // if (authorId) {
-    //   filter.where = {
-    //     fkAuthor: authorId,
-    //   };
-    // }
+    if (statusFilter && statusFilter !== '') {
+      filter.where.status = statusFilter;
+    }
 
     const data = await transactions.findAll(filter);
 
