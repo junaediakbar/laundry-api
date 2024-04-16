@@ -6,6 +6,8 @@ const cors = require('cors');
 const app = express();
 const http = require('http');
 
+process.env.TZ = 'Asia/Makassar';
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
