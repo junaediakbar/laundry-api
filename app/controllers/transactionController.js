@@ -78,6 +78,7 @@ const addTransaction = async (req, res) => {
     service,
     status,
     price,
+    datePayment,
     perprice,
     cashier,
     notes = '',
