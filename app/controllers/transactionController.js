@@ -108,7 +108,7 @@ const addTransaction = async (req, res) => {
         datePayment:
           status == StatusPembayaran.BELUM_BAYAR || status == null
             ? null
-            : dateDone,
+            : datePayment,
         status: status,
         notes: notes,
         cashier: cashier,
