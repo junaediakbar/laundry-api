@@ -78,6 +78,7 @@ const addTransaction = async (req, res) => {
     service,
     status,
     price,
+    amountPayment,
     datePayment,
     perprice,
     cashier,
@@ -106,6 +107,7 @@ const addTransaction = async (req, res) => {
         dateIn: dateIn,
         dateOut: null,
         dateDone: dateDone,
+        amountPayment: amountPayment,
         datePayment:
           status == StatusPembayaran.BELUM_BAYAR || status == null
             ? null
