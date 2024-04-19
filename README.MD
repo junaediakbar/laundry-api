@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Laundry API</h1>
-  <p>🛒 Simple E-Commerce API for Administrator built with Express, Sequelize, Mysql, and Javascript </p>
+  <p>🛒 Simple Laundry API for Administrator built with Express, Sequelize, Mysql, and Javascript </p>
 </div>
 
 ## Features
@@ -40,7 +40,7 @@ See the frontend repository [here](https://github.com/junaediakbar/laundry-fe)
 
 - Express
 - MySQL2
-- Sequelize ORM
+- Sequelize
 - MySQL
 - Deploy with Vercel
 - File upload with [IMAGE KIT](https://imagekit.io/)
